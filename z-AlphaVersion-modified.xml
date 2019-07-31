@@ -495,7 +495,20 @@
 		<!--DATA: UtcTime, SourceProcessGuid, SourceProcessId, SourceThreadId, SourceImage, TargetProcessGuid, TargetProcessId, TargetImage, GrantedAccess, CallTrace-->
 	<RuleGroup name="" groupRelation="or">
 		<ProcessAccess onmatch="include">
-			<!--NOTE: Using "include" with no rules means nothing in this section will be logged-->
+			<TargetImage condition="contains">lsass.exe</TargetImage> <!--Local Security Authority Subsystem Service, prime target for credential dumping attacks-->
+		</ProcessAccess>
+		<ProcessAccess onmatch="exclude"> <!--Exclude services that access lsass.exe legitimately-->
+			<SourceImage condition="end with">wmiprvse.exe</SourceImage> <!--WMI Provider Host-->
+			<SourceImage condition="end with">taskmgr.exe</SourceImage> <!--Task Manager-->
+			<SourceImage condition="is">C:\Windows\System32\lsm.exe</SourceImage> <!--Local Session Manager Service-->
+						<SourceImage condition="end with">Microsoft.Identity.AadConnect.Health.AadSync.Host.exe</SourceImage> <!--Microsoft Azure AD Connect Health Sync Agent-->
+			<SourceImage condition="end with">GoogleUpdate.exe</SourceImage> <!--Google Updater-->
+			<!--Todo: Customize entries below-->
+			<SourceImage condition="end with">\Kaspersky Lab\Kaspersky Endpoint Security for Windows\avp.exe</SourceImage> <!--Kaspersky Endpoint Security for Windows-->
+			<SourceImage condition="end with">VBoxService.exe</SourceImage> <!---Virtual Box Service-->
+			<SourceImage condition="end with">vmtoolsd.exe</SourceImage> <!--VMware Tools Core Service-->
+			<SourceImage condition="end with">vmware-authd.exe</SourceImage> <!--VMware Authorization Service-->
+			<SourceImage condition="end with">\Citrix\System32\wfshell.exe</SourceImage> <!--Citrix MetaFrame process in C:\Program Files (x86)\Citrix\System32\wfshell.exe-->
 		</ProcessAccess>
 	</RuleGroup>
 
@@ -848,6 +861,7 @@
 	<!--SYSMON EVENT ID 17 & 18 : PIPE CREATED / PIPE CONNECTED [PipeEvent]-->
 		<!--EVENT 17: "Pipe Created"-->
 		<!--EVENT 18: "Pipe Connected"-->
+		<!--COMMENT:	Disabled by default due to high amount of noise.-->
 
 		<!--ADDITIONAL REFERENCE: [ https://www.cobaltstrike.com/help-smb-beacon ] -->
 		<!--ADDITIONAL REFERENCE: [ https://blog.cobaltstrike.com/2015/10/07/named-pipe-pivoting/ ] -->
@@ -855,7 +869,7 @@
 		<!--DATA: UtcTime, ProcessGuid, ProcessId, PipeName, Image-->
 	<RuleGroup name="" groupRelation="or">
 		<PipeEvent onmatch="include">
-			<!--NOTE: Using incide with no rules means nothing in this section will be logged-->
+			<!--NOTE: Using include with no rules means nothing in this section will be logged-->
 		</PipeEvent>
 	</RuleGroup>
 
