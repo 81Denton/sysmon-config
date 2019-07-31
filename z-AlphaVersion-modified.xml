@@ -69,7 +69,7 @@
 
 <Sysmon schemaversion="4.21">
 	<!--SYSMON META CONFIG-->
-	<HashAlgorithms>sha256,imphash</HashAlgorithms> <!-- Both MD5 and SHA256 are the industry-standard algorithms for identifying files -->
+	<HashAlgorithms>sha256,imphash</HashAlgorithms> <!-- SHA256 has no known collisions, IMPHASH is valuable for malware tracking -->
 	<CheckRevocation/> <!-- Check loaded drivers, log if their code-signing certificate has been revoked, in case malware stole one to sign a kernel driver -->
 
 	<!-- <ImageLoad/> --> <!-- Would manually force-on ImageLoad monitoring, even without configuration below. Included only documentation. -->
@@ -491,6 +491,7 @@
 		<!--EVENT 10: "Process accessed"-->
 		<!--COMMENT:	Can cause high system load, disabled by default.-->
 		<!--COMMENT:	Monitor for processes accessing other process' memory.-->
+		<!--COMMENT:	[ https://www.eideon.com/2017-09-09-THL01-Mimikatz/ ] -->
 
 		<!--DATA: UtcTime, SourceProcessGuid, SourceProcessId, SourceThreadId, SourceImage, TargetProcessGuid, TargetProcessId, TargetImage, GrantedAccess, CallTrace-->
 	<RuleGroup name="" groupRelation="or">
@@ -880,11 +881,12 @@
 
 		<!--ADDITIONAL REFERENCE: [ https://www.darkoperator.com/blog/2017/10/15/sysinternals-sysmon-610-tracking-of-permanent-wmi-events ] -->
 		<!--ADDITIONAL REFERENCE: [ https://rawsec.lu/blog/posts/2017/Sep/19/sysmon-v610-vs-wmi-persistence/ ] -->
+		<!--ADDITIONAL REFERENCE: [ https://www.eideon.com/2018-03-02-THL03-WMIBackdoors ] -->
 
 		<!--DATA: EventType, UtcTime, Operation, User, Name, Type, Destination, Consumer, Filter-->
 	<RuleGroup name="" groupRelation="or">
-		<WmiEvent onmatch="exclude">
-			<!--NOTE: Using exclude with no rules means everything will be logged-->
+		<WmiEvent onmatch="include">
+			<Operation condition="is">Created</Operation> <!--Check for WMI Persistence-->
 		</WmiEvent>
 	</RuleGroup>
 
@@ -926,7 +928,7 @@
 
 	<RuleGroup name="" groupRelation="or">
 		<DnsQuery onmatch="include">
-			<!--NOTE: Using include with no rules means nothing will be logged.-->
+			<!--NOTE: Using include with no rules means nothing in this section will be logged.-->
 		</DnsQuery>
 	</RuleGroup>
 
