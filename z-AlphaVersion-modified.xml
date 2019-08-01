@@ -526,7 +526,7 @@
 			<SourceImage condition="end with">wmiprvse.exe</SourceImage> <!--WMI Provider Host-->
 			<SourceImage condition="end with">taskmgr.exe</SourceImage> <!--Task Manager-->
 			<SourceImage condition="is">C:\Windows\System32\lsm.exe</SourceImage> <!--Local Session Manager Service-->
-						<SourceImage condition="end with">Microsoft.Identity.AadConnect.Health.AadSync.Host.exe</SourceImage> <!--Microsoft Azure AD Connect Health Sync Agent-->
+			<SourceImage condition="end with">Microsoft.Identity.AadConnect.Health.AadSync.Host.exe</SourceImage> <!--Microsoft Azure AD Connect Health Sync Agent-->
 			<SourceImage condition="end with">GoogleUpdate.exe</SourceImage> <!--Google Updater-->
 			<!--Todo: Customize entries below-->
 			<SourceImage condition="end with">\Kaspersky Lab\Kaspersky Endpoint Security for Windows\avp.exe</SourceImage> <!--Kaspersky Endpoint Security for Windows-->
