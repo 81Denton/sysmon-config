@@ -292,7 +292,9 @@
 			<TargetFilename name="T1099" condition="end with">.exe</TargetFilename> <!--Look for backdated executables anywhere-->
 			<Image name="T1099" condition="begin with">\Device\HarddiskVolumeShadowCopy</Image> <!--Nothing should be written here | Credit: @SBousseaden [ https://twitter.com/SBousseaden/status/1133030955407630336 ] -->
 		</FileCreateTime>
+	</RuleGroup>
 
+	<RuleGroup name="" groupRelation="or">
 		<FileCreateTime onmatch="exclude">
 			<Image condition="image">OneDrive.exe</Image> <!--OneDrive constantly changes file times-->
 			<Image condition="image">C:\Windows\system32\backgroundTaskHost.exe</Image>
@@ -405,7 +407,9 @@
 			<DestinationPort name="Tor" condition="is">9001</DestinationPort> <!--Tor protocol [ http://www.computerworlduk.com/tutorial/security/tor-enterprise-2016-blocking-malware-darknet-use-rogue-nodes-3633907/ ] -->
 			<DestinationPort name="Tor" condition="is">9030</DestinationPort> <!--Tor protocol [ http://www.computerworlduk.com/tutorial/security/tor-enterprise-2016-blocking-malware-darknet-use-rogue-nodes-3633907/ ] -->
 		</NetworkConnect>
+	</RuleGroup>
 
+	<RuleGroup name="" groupRelation="or">
 		<NetworkConnect onmatch="exclude">
 			<!--COMMENT: Unfortunately, these exclusions are very broad and easily abused, but it's a limitation of Sysmon rules that they can't be more specific as they're in user folders-->
 			<Image condition="end with">AppData\Roaming\Dropbox\bin\Dropbox.exe</Image> <!--Dropbox-->
@@ -436,7 +440,9 @@
 			<Image condition="begin with">C:\Users</Image> <!--Process terminations by user binaries-->
 			<Image condition="begin with">\</Image> <!--Devices and VSC shouldn't be executing changes | Credit: @SBousseaden @ionstorm @neu5ron @PerchedSystems [ https://twitter.com/SwiftOnSecurity/status/1133167323991486464 ] -->
 		</ProcessTerminate>
+	</RuleGroup>
 
+	<RuleGroup name="" groupRelation="or">
 		<ProcessTerminate onmatch="exclude">
 		</ProcessTerminate>
 	</RuleGroup>
@@ -513,6 +519,9 @@
 		<ProcessAccess onmatch="include">
 			<TargetImage condition="contains">lsass.exe</TargetImage> <!--Local Security Authority Subsystem Service, prime target for credential dumping attacks-->
 		</ProcessAccess>
+	</RuleGroup>
+
+	<RuleGroup name="" groupRelation="or">
 		<ProcessAccess onmatch="exclude"> <!--Exclude services that access lsass.exe legitimately-->
 			<SourceImage condition="end with">wmiprvse.exe</SourceImage> <!--WMI Provider Host-->
 			<SourceImage condition="end with">taskmgr.exe</SourceImage> <!--Task Manager-->
@@ -587,7 +596,9 @@
 			<TargetFilename condition="end with">.ppt</TargetFilename> <!--Legacy Office files are often used for attacks-->
 			<TargetFilename condition="end with">.rtf</TargetFilename> <!--RTF files often 0day malware vectors when opened by Office-->
 		</FileCreate>
+	</RuleGroup>
 
+	<RuleGroup name="" groupRelation="or">
 		<FileCreate onmatch="exclude">
 			<!--SECTION: Microsoft-->
 			<Image condition="is">C:\Program Files (x86)\EMET 5.5\EMET_Service.exe</Image> <!--Microsoft:EMET: Writes to C:\Windows\AppPatch\-->
@@ -778,10 +789,11 @@
 			<TargetObject condition="contains">Microsoft\Cryptography\Providers\Trust\</TargetObject> <!-- Important trust registry values to monitor -->
 			<TargetObject condition="contains">WOW6432Node\Microsoft\Cryptography\Providers\Trust\</TargetObject> <!-- Important trust registry values to monitor -->
 		</RegistryEvent>
+	</RuleGroup>
 
+	<RuleGroup name="" groupRelation="or">
 		<RegistryEvent onmatch="exclude">
 		<!--COMMENT:	Remove low-information noise. Often these hide a procress recreating an empty key and do not hide the values created subsequently.-->
-
 		<!--NOTE:	A lot of noise can be removed by excluding CreateKey events, which are largely innocuous-->
 
 			<TargetObject condition="begin with">HKLM\COMPONENTS</TargetObject>
@@ -879,7 +891,9 @@
 			<TargetFilename condition="end with">.vbs</TargetFilename> <!--VisualBasicScripting files-->
 			<TargetFilename condition="end with">.wsf</TargetFilename> <!--WindowsScript file-->
 		</FileCreateStreamHash>
+	</RuleGroup>
 
+	<RuleGroup name="" groupRelation="or">
 		<FileCreateStreamHash onmatch="exclude">
 		</FileCreateStreamHash>
 	</RuleGroup>
